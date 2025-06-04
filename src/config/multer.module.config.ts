@@ -15,7 +15,7 @@ const multerOptions = {
     cloudinary,
     params: async (req, file): Promise<any> => {
       return {
-        folder: 'blog', // 원하는 폴더 이름
+        // folder: 'blog', // 원하는 폴더 이름
         allowed_formats: ['jpg', 'png', 'jpeg', 'webp'],
         public_id: file.originalname.split('.')[0], // 선택: 원래 파일명 기반 저장
       };
