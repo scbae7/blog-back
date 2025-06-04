@@ -16,6 +16,6 @@ export class FileController {
   async uploadFile(@UploadedFile() file: Express.Multer.File) {
     // fileService에서 Cloudinary 업로드 후 URL 반환하는 방식 추천
     const url = await this.fileService.uploadImage(file);
-    return { url };
+    return url;
   }
 }
