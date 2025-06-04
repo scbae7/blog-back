@@ -1,27 +1,26 @@
-import { MulterOptions } from "@nestjs/platform-express/multer/interfaces/multer-options.interface";
-import { diskStorage } from "multer";
-import { v4 as uuidv4 } from 'uuid';
-import { config } from 'dotenv';
-import * as path from 'path';
-import { ImageFileFilter } from "filter";
+// src/config/multer.module.config.ts
 
-config();
+import { v2 as cloudinary } from 'cloudinary';
+import { CloudinaryStorage } from 'multer-storage-cloudinary';
+import { Express } from 'express';
 
-const uploadPath = process.env.FILE_PATH || path.join(__dirname, '..', '..', 'fileUpload');
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+});
 
-// console.log('>>> [UPLOAD PATH]:', uploadPath);
-
-const multerModuleConfig: MulterOptions = {
-  storage: diskStorage({
-    destination: uploadPath,
-    filename: (request, file, callback) => {
-      callback(null, uuidv4() + '.' + file.mimetype.split('/')[1]);
-    }
+const multerOptions = {
+  storage: new CloudinaryStorage({
+    cloudinary,
+    params: async (req, file): Promise<any> => {
+      return {
+        folder: 'blog', // 원하는 폴더 이름
+        allowed_formats: ['jpg', 'png', 'jpeg', 'webp'],
+        public_id: file.originalname.split('.')[0], // 선택: 원래 파일명 기반 저장
+      };
+    },
   }),
-  fileFilter: ImageFileFilter,
-  limits: {
-    fileSize: 1024 * 1024 * 100
-  }
 };
 
-export { multerModuleConfig, uploadPath };
+export default multerOptions;

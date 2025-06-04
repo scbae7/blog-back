@@ -1,6 +1,6 @@
 import { join } from "path";
 import { ServeStaticModuleOptions } from "@nestjs/serve-static";
-import { uploadPath } from "./multer.module.config";
+import { uploadPath } from "./legacy-multer.module.config";
 
 import { config } from  'dotenv';
 
